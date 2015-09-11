@@ -31,18 +31,17 @@ class Player
     @toughness = 50
 
     if height then
-      puts height
+      # puts height
       h = height.split("'")
       feet = h[0].to_i
       inches = h[1].to_i
       @height = (feet * 12) + inches
-      puts @height
+      # puts @height
     end
 
     if weight then
-
       @weight = weight.to_i
-      puts @weight
+      # puts @weight
     else
       @weight = 200
     end

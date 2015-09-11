@@ -100,8 +100,6 @@ csv.each do |row|
   zone_cov = row['Zone Coverage']
   overall = row['OVR']
 
-  puts ""
-
   if team_id
     p = Player.new(team_id, first, last, position, height, weight)
     p.id = @player_id
@@ -116,9 +114,9 @@ csv.each do |row|
     p.overall = overall.to_i
     p.potential = overall.to_i
 
-    team_count = @players.select{|p| p.team_id === team_id}.count
-    puts "Team: #{team_name}"
-    puts "Players: #{team_count}"
+    # team_count = @players.select{|p| p.team_id === team_id}.count
+    # puts "Team: #{team_name}"
+    # puts "Players: #{team_count}"
 
     # if p.overall < 64 or team_count > 52
     #   p.team_id = -1
@@ -130,10 +128,10 @@ csv.each do |row|
   else
     puts "Cannot find #{team_name}"
   end
-end
+end`
 
-puts "players count: #{@players.count}"
-puts "free agent count: #{@free_agents}"
+puts "player count: #{@players.count}"
+# puts "free agent count: #{@free_agents}"
 
 File.open(output_file, 'w') do |f|
   players = @players.map{|p| p.json_format}
