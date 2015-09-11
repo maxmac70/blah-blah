@@ -10,6 +10,7 @@ require 'json'
 
 @import_file = 'players_updated.csv'
 @output_file = 'roster_file.json'
+@output_file_with_fa = 'roster_file_fa.json'
 
 csv_data = File.read(@import_file)
 csv = CSV.parse(csv_data, :headers => true)
@@ -139,7 +140,7 @@ end
 puts "player count: #{@players.count}"
 puts "free agents created: #{@free_agent_count}" if @create_free_agents
 
-File.open(@output_file, 'w') do |f|
+File.open(@create_free_agents ? @output_file_with_fa : @output_file, 'w') do |f|
   players = @players.map{|p| p.json_format}
 
   output = {

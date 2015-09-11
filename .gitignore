@@ -2,4 +2,5 @@
 .DS_Store
 
 roster_file.json
+roster_file_fa.json
 scraper_cache.csv
