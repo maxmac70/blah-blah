@@ -1,7 +1,7 @@
 
 class Player
-  attr_reader :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance, :hands
-  attr_writer :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance, :hands
+  attr_reader :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance, :hands, :draft_year, :draft_team_id, :draft_round, :draft_pick
+  attr_writer :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance, :hands, :draft_year, :draft_team_id, :draft_round, :draft_pick
 
   def initialize(team_id = 0, first_name = '', last_name = '', position = '', height = nil, weight = nil)
     @team_id = team_id
@@ -11,10 +11,10 @@ class Player
     @height = 70
     @weight =  200
     @image_url = ''
-    @birth_year = 1985
+    @birth_year = 1984
     @birth_location = 'USA'
-    @contract_amount = 1000
-    @contract_expiration = 2017
+    @contract_amount = 435
+    @contract_expiration = 2016
 
     @speed = 50
     @strength = 50
@@ -29,19 +29,22 @@ class Player
     @potential = 50
     @hands = 50
     @toughness = 50
+    @overall = 50
+
+    @draft_year = 2013
+    @draft_team_id = -1
+    @draft_pick = 0
+    @draft_round = 0
 
     if height then
-      # puts height
       h = height.split("'")
       feet = h[0].to_i
       inches = h[1].to_i
       @height = (feet * 12) + inches
-      # puts @height
     end
 
     if weight then
       @weight = weight.to_i
-      # puts @weight
     else
       @weight = 200
     end
@@ -83,23 +86,44 @@ class Player
       'off'
     elsif ['DL', 'LB', 'CB', 'S'].include?(self.output_position)
       'def'
-    else
+    elsif self.output_position == 'K'
       'k'
+    else # something went wrong, just set to 'offense'
+      'off'
     end
+  end
+
+  def set_ratings(speed, strength, endurance, athleticism, height, hands, game_iq, toughness, awareness, aggresiveness, motor, passing, receiving, blocking, def_rush, tackle, coverage, kicking, potential)
+    @speed = speed
+    @strength = strength
+    @endurance = endurance
+    @athleticism = athleticism
+    @height = height
+    @hands = hands
+    @game_iq = game_iq
+    @toughness = toughness
+    @awareness = awareness
+    @aggresiveness = aggresiveness
+    @motor = motor
+    @passing = passing
+    @receiving = receiving
+    @blocking = blocking
+    @def_rush = def_rush,
+    @tackle = tackle
+    @coverage = coverage
+    @kicking = kicking
+    @potential = potential
   end
 
   def draft_details
     details = {
-      :round => 0,
-      :pick => 0,
-      :tid => -1,
+      :round => @draft_round,
+      :pick => @draft_pick,
+      :tid => @draft_team_id,
       :originalTid => -1,
-      :year => 2006,
+      :year => @draft_year,
       :teamName => nil,
-      :teamRegion => nil,
-      :pot => 75,
-      :ovr => 65,
-      :skills => []
+      :teamRegion => nil
     }
 
     return details
@@ -135,61 +159,65 @@ class Player
     return fam
   end
 
+  def default_face
+    {
+      :head => {
+        :id => 0
+      },
+      :eyebrows => [
+        {
+          :id => 0,
+          :lr => 'l',
+          :cx => 135,
+          :cy => 250
+        },
+        {
+          :id => 0,
+          :lr => 'r',
+          :cx => 265,
+          :cy => 250
+        }
+      ],
+      :eyes => [
+        {
+          :id => 3,
+          :lr => 'l',
+          :cx => 135,
+          :cy => 280,
+          :angle => 26.341
+        },
+        {
+          :id => 3,
+          :lr => 'r',
+          :cx => 265,
+          :cy => 280,
+          :angle => 26.341
+        }
+      ],
+      :nose => {
+        :id => 2,
+        :lr => 'l',
+        :cx => 200,
+        :cy => 330,
+        :size => 0.017,
+        :flip => false
+      },
+      :mouth => {
+        :id => 1,
+        :cx => 200,
+        :cy => 400
+      },
+      :hair => {
+        :id => 1
+      },
+      :fatness => 0.0305,
+      :color => '74453d',
+    }
+  end
+
   def json_format
     {
-      :face => {
-        :head => {
-          :id => 0
-        },
-        :eyebrows => [
-          {
-            :id => 0,
-            :lr => 'l',
-            :cx => 135,
-            :cy => 250
-          },
-          {
-            :id => 0,
-            :lr => 'r',
-            :cx => 265,
-            :cy => 250
-          }
-        ],
-        :eyes => [
-          {
-            :id => 3,
-            :lr => 'l',
-            :cx => 135,
-            :cy => 280,
-            :angle => 26.341
-          },
-          {
-            :id => 3,
-            :lr => 'r',
-            :cx => 265,
-            :cy => 280,
-            :angle => 26.341
-          }
-        ],
-        :nose => {
-          :id => 2,
-          :lr => 'l',
-          :cx => 200,
-          :cy => 330,
-          :size => 0.017,
-          :flip => false
-        },
-        :mouth => {
-          :id => 1,
-          :cx => 200,
-          :cy => 400
-        },
-        :hair => {
-          :id => 1
-        },
-        :fatness => 0.0305,
-        :color => '74453d',
-      },
+      # :face => self.default_face,
       :ratings => self.ratings,
       :born => {
         :year => @birth_year,
@@ -200,7 +228,6 @@ class Player
         :exp => @contract_expiration
       },
       :tid => @team_id,
-      :rosterOrder => nil,
       :pos => self.output_position,
       :height => @height,
       :weight => @weight,
