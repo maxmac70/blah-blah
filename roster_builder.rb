@@ -109,6 +109,11 @@ csv.each do |row|
   block_shedding = row['Block Shedding']
   pursuit = row['Pursuit']
   catching = row['Catching']
+  agility = row['Agility']
+  hit_power = row['Hit Power']
+  acceleration = row['Acceleration']
+  jumping = row['Jumping']
+  power_moves = row['Power Moves']
 
   if team_id
     p = Player.new(team_id, first, last, position, height, weight)
@@ -130,6 +135,10 @@ csv.each do |row|
     p.def_rush = (block_shedding.to_i + pursuit.to_i) / 2
     p.receiving = catching.to_i
     p.hands = catching.to_i
+    p.athleticism = (agility.to_i + acceleration.to_i) / 2
+    p.aggresiveness = hit_power.to_i
+    p.motor = (power_moves.to_i + jumping.to_i) / 2 if p.position_group === 'def'
+    p.motor = (jumping.to_i) if p.position_group != 'def'
 
     # team_count = @players.select{|p| p.team_id === team_id}.count
     # puts "Team: #{team_name}"
