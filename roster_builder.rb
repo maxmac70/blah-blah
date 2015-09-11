@@ -84,27 +84,28 @@ csv.each do |row|
     p = Player.new(team_id, first, last, position, height, weight)
     p.id = @player_id
 
-    p.endurance = stamina.to_i
+    p.endurance = (stamina.to_i + injury.to_i) / 2
     p.speed = speed.to_i
     p.strength = strength.to_i
-    p.toughness = toughness.to_i
+    p.toughness = (toughness.to_i + injury.to_i) / 2
     p.awareness = awareness.to_i
     p.game_iq = awareness.to_i
-    p.blocking = (pass_block.to_i + run_block.to_i) / 2
+    p.blocking = (pass_block.to_i + run_block.to_i + impact_block.to_i) / 3
     p.tackle = tackle.to_i
     p.coverage = (man_cov.to_i + zone_cov.to_i) / 2
     p.overall = overall.to_i
     p.potential = overall.to_i
     p.kicking = (kick_pwr.to_i + kick_acc.to_i) / 2
     p.strength = throw_pwr.to_i if position.downcase === 'qb'
-    p.passing = (throw_acc_short.to_i + throw_acc_mid.to_i + throw_acc_deep.to_i + throw_on_run.to_i) / 4
+    p.passing = (play_action.to_i + throw_acc_short.to_i + throw_acc_mid.to_i + throw_acc_deep.to_i) / 4
     p.def_rush = (block_shedding.to_i + pursuit.to_i) / 2
-    p.receiving = catching.to_i
+    p.receiving = (catching.to_i + catch_in_traffic.to_i + spectacular_catch.to_i) / 3
     p.hands = catching.to_i
-    p.athleticism = (agility.to_i + acceleration.to_i) / 2
-    p.aggresiveness = hit_power.to_i
-    p.motor = (power_moves.to_i + jumping.to_i) / 2 if p.position_group === 'def'
-    p.motor = (jumping.to_i) if p.position_group != 'def'
+    p.athleticism = (agility.to_i + acceleration.to_i + jumping.to_i + elusiveness.to_i) / 4
+    p.athleticism = (agility.to_i + acceleration.to_i + jumping.to_i + elusiveness.to_i + throw_on_run.to_i) / 5 if position.downcase === 'qb'
+    p.aggresiveness = (acceleration.to_i + tackle.to_i + pursuit.to_i) / 3
+    p.motor = (block_shedding.to_i + power_moves.to_i + hit_power.to_i) / 2
+
     p.contract_amount = contract_val
     p.contract_expiration = contract_exp
     p.image_url = image_url
