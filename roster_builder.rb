@@ -99,6 +99,16 @@ csv.each do |row|
   man_cov = row['Man Coverage']
   zone_cov = row['Zone Coverage']
   overall = row['OVR']
+  kick_pwr = row['Kick Power']
+  kick_acc = row['Kick Accuracy']
+  throw_pwr = row['Throw Power']
+  throw_acc_short = row['Throw Accuracy Short']
+  throw_acc_mid = row['Throw Accuracy Mid']
+  throw_acc_deep = row['Throw Accuracy Deep']
+  throw_on_run = row['Throw On The Run']
+  block_shedding = row['Block Shedding']
+  pursuit = row['Pursuit']
+  catching = row['Catching']
 
   if team_id
     p = Player.new(team_id, first, last, position, height, weight)
@@ -108,11 +118,18 @@ csv.each do |row|
     p.strength = strength.to_i
     p.toughness = toughness.to_i
     p.awareness = awareness.to_i
+    p.game_iq = awareness.to_i
     p.blocking = (pass_block.to_i + run_block.to_i) / 2
     p.tackle = tackle.to_i
     p.coverage = (man_cov.to_i + zone_cov.to_i) / 2
     p.overall = overall.to_i
     p.potential = overall.to_i
+    p.kicking = (kick_pwr.to_i + kick_acc.to_i) / 2
+    p.strength = throw_pwr.to_i if position.downcase === 'qb'
+    p.passing = (throw_acc_short.to_i + throw_acc_mid.to_i + throw_acc_deep.to_i + throw_on_run.to_i) / 4
+    p.def_rush = (block_shedding.to_i + pursuit.to_i) / 2
+    p.receiving = catching.to_i
+    p.hands = catching.to_i
 
     # team_count = @players.select{|p| p.team_id === team_id}.count
     # puts "Team: #{team_name}"
@@ -128,7 +145,7 @@ csv.each do |row|
   else
     puts "Cannot find #{team_name}"
   end
-end`
+end
 
 puts "player count: #{@players.count}"
 # puts "free agent count: #{@free_agents}"

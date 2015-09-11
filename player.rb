@@ -1,7 +1,7 @@
 
 class Player
-  attr_reader :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance
-  attr_writer :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance
+  attr_reader :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance, :hands
+  attr_writer :id, :team_id, :first_name, :last_name, :position, :height, :weight, :image_url, :birth_year, :birth_location, :contract_amount, :contract_expiration, :overall, :speed, :strength, :awareness, :catching, :blocking, :tackle, :stamina, :toughness, :coverage, :athleticism, :game_iq, :aggresiveness, :motor, :passing, :receiving, :def_rush, :kicking, :potential, :endurance, :hands
 
   def initialize(team_id = 0, first_name = '', last_name = '', position = '', height = nil, weight = nil)
     @team_id = team_id
@@ -74,7 +74,6 @@ class Player
       when 'k', 'p'
         'K'
       else
-        puts "@position: #{@position}"
         'WTF'
     end
   end
