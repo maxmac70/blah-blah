@@ -2,8 +2,7 @@ require 'json'
 require 'mechanize'
 
 class Team
-  attr_reader :id, :conference_id, :division_id, :city, :nickname, :abbreviation, :population, :image_url, :default_player_image, :salary_data
-  attr_writer :id, :conference_id, :division_id, :city, :nickname, :abbreviation, :population, :image_url, :default_player_image, :salary_data
+  attr_accessor :id, :conference_id, :division_id, :city, :nickname, :abbreviation, :population, :image_url, :default_player_image, :salary_data
 
   def initialize(team_id, conference_id, division_id, city, nickname, abbreviation, population, image_url = '')
     @id = team_id

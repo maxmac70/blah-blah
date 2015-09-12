@@ -1,9 +1,7 @@
 require 'mechanize'
 
 class WebScraper
-
-  attr_reader :agent
-  attr_writer :agent
+  attr_accessor :agent
 
   def initialize()
     @agent = Mechanize.new {|agent| agent.user_agent_alias = 'Mac Safari'}
