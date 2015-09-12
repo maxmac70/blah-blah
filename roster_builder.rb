@@ -1,6 +1,7 @@
-require './player'
 require 'csv'
 require 'json'
+require './player'
+require './util'
 
 @create_free_agents = true # if true, the code will automatically trim each roster down to 53
 
@@ -84,6 +85,7 @@ csv.each do |row|
   if team_id
     p = Player.new(team_id, first, last, position, height, weight)
     p.id = @player_id
+    p.team_name = team_name.strip
 
     p.endurance = (stamina.to_i + injury.to_i) / 2
     p.speed = speed.to_i
@@ -130,7 +132,14 @@ if @create_free_agents
     team_count = team_members.count
     to_remove = team_count - 52
     sorted_team_members = team_members.sort_by(&:overall)
+    team_name = sorted_team_members.first.team_name
+    image_base_url = "http://static.nfl.com/static/content/public/image/fantasy/transparent/200x200"
+    team_image = "#{image_base_url}/#{Util.team_abbreviation(team_name)}.png"
+    free_agent_image = "#{image_base_url}/FA.png"
     (0..to_remove).each do |i|
+      # if the stock team player photo is currently used, switch to the free agent generic photo
+      sorted_team_members[i].image_url = free_agent_image if sorted_team_members[i].image_url === team_image
+      # set the team_id to -1
       sorted_team_members[i].team_id = -1
       @free_agent_count += 1
     end
