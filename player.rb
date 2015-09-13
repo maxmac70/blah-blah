@@ -223,12 +223,12 @@ class Player
         :loc => @birth_location
       },
       :contract => {
-        :amount => @contract_amount,
+        :amount => @contract_amount.to_i,
         :exp => @contract_expiration
       },
       :tid => @team_id,
       :pos => self.output_position,
-      :height => @height,
+      :hgt => @height,
       :weight => @weight,
       :offDefK => self.position_group,
       :active => false,
