@@ -1,6 +1,4 @@
 # File system
 .DS_Store
 
-*.json
-scraper_cache.csv
-players_updated_new.csv
+csv/players_updated_new.csv

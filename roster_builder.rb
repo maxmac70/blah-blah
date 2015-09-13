@@ -3,15 +3,19 @@ require 'json'
 require './player'
 require './util'
 
-@create_free_agents = true # if true, the code will automatically trim each roster down to 53
+# if true, the code will automatically trim each roster down to 53
+# and generate an additional roster file
+@create_free_agents = true
 
+@startingSeason = 2016
 @players = []
+@players_with_free_agents = []
 @player_id = 1
 @free_agent_count = 0
 
-@import_file = 'players_updated.csv'
-@output_file = 'roster_file.json'
-@output_file_with_fa = 'roster_file_fa.json'
+@import_file = 'csv/players_updated.csv'
+@output_file = 'roster/roster_15-16.json'
+@output_file_with_fa = 'roster/roster_15-16_with_fa.json'
 
 csv_data = File.read(@import_file)
 csv = CSV.parse(csv_data, :headers => true)
@@ -102,12 +106,12 @@ csv.each do |row|
     p.strength = throw_pwr.to_i if position.downcase === 'qb'
     p.passing = (play_action.to_i + throw_acc_short.to_i + throw_acc_mid.to_i + throw_acc_deep.to_i) / 4
     p.def_rush = (block_shedding.to_i + pursuit.to_i) / 2
-    p.receiving = (catching.to_i + catch_in_traffic.to_i + spectacular_catch.to_i) / 3
+    p.receiving = catching.to_i
     p.hands = catching.to_i
     p.athleticism = (agility.to_i + acceleration.to_i + jumping.to_i + elusiveness.to_i) / 4
     p.athleticism = (agility.to_i + acceleration.to_i + jumping.to_i + elusiveness.to_i + throw_on_run.to_i) / 5 if position.downcase === 'qb'
     p.aggresiveness = (acceleration.to_i + tackle.to_i + pursuit.to_i) / 3
-    p.motor = (block_shedding.to_i + power_moves.to_i + hit_power.to_i) / 2
+    p.motor = (block_shedding.to_i + power_moves.to_i + hit_power.to_i) / 3
 
     p.contract_amount = contract_val
     p.contract_expiration = contract_exp
@@ -126,9 +130,13 @@ csv.each do |row|
   end
 end
 
+@players_with_free_agents = @players
+
 if @create_free_agents
+  # loop through teams and simply drop the lowest rated players to trim roster down to 53
+  # would be better to drop players more strategically based on position, etc
   (0..31).each do |tid|
-    team_members = @players.select{|p| p.team_id === tid}
+    team_members = @players_with_free_agents.select{|p| p.team_id === tid}
     team_count = team_members.count
     to_remove = team_count - 52
     sorted_team_members = team_members.sort_by(&:overall)
@@ -149,13 +157,28 @@ end
 puts "player count: #{@players.count}"
 puts "free agents created: #{@free_agent_count}" if @create_free_agents
 
-File.open(@create_free_agents ? @output_file_with_fa : @output_file, 'w') do |f|
+# generate roster file without free agents
+File.open(@output_file, 'w') do |f|
   players = @players.map{|p| p.json_format}
 
   output = {
-    :startingSeason => 2016,
+    :startingSeason => @startingSeason,
     :players => players
   }
 
   f.write output.to_json
+end
+
+if @create_free_agents
+  # generate roster file with free agents
+  File.open(@output_file_with_fa, 'w') do |f|
+    players = @players_with_free_agents.map{|p| p.json_format}
+
+    output = {
+      :startingSeason => @startingSeason,
+      :players => players
+    }
+
+    f.write output.to_json
+  end
 end

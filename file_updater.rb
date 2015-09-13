@@ -1,14 +1,15 @@
+require 'csv'
+
 require './team'
 require './player'
 require './web_scrape'
-require 'csv'
 
 @teams = []
 @players = []
 @player_id = 1
 
-import_file = 'players.csv'
-updated_player_file = 'players_updated_new.csv'
+import_file = 'csv/players.csv'
+updated_player_file = 'csv/players_updated_new.csv'
 
 def write_csv(csv_file, data)
   CSV.open(csv_file, 'a+') do |csv|

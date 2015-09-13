@@ -3,7 +3,7 @@ require 'csv'
 
 class Util
   class << self
-    def fix_player_images(input_file='players_updated.csv', output_file='players_updated_new.csv')
+    def fix_player_images(input_file='csv/players_updated.csv', output_file='csv/players_updated.csv')
       output_csv_data = []
       csv_input_data = CSV.read(input_file)
       file_length = (csv_input_data.count - 1)
