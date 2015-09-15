@@ -64,7 +64,7 @@ class Team
   end
 
   def json_format
-    {
+    {`
       :tid => @id,
       :cid => @conference_id,
       :did => @division_id,

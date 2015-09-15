@@ -67,11 +67,7 @@ class Util
         first_name = csv_input_data[i][1]
         last_name = csv_input_data[i][2]
         position = csv_input_data[i][3]
-        draft_year = csv_input_data[i][58]
         draft_team_id = csv_input_data[i][59]
-        draft_round = csv_input_data[i][60]
-        draft_pick = csv_input_data[i][61]
-        puts draft_team_id
 
         if draft_team_id == '-1'
           player_name = "#{first_name} #{last_name}"
@@ -95,9 +91,11 @@ class Util
           if data_row = @draft_class.at("tr:contains('#{player_name}')")
             if pos = data_row.children[9].child.text
               if pos === match_position
-                draft_year = draft_class_year
-                draft_round = data_row.children[1].to_i
-                draft_pick = data_row.children[3].to_i
+                csv_input_data[i][58] = draft_class_year
+                csv_input_data[i][60] = data_row.children[1].child.text.to_i
+                csv_input_data[i][61] = data_row.children[3].child.text.to_i
+                csv_input_data[i][59] = Util.team_id_from_pfr_abbreviation(data_row.children[5].child.text.strip)
+
                 draft_info_changed += 1
               end
             end
@@ -126,6 +124,46 @@ class Util
 
     def get_draft_log(year)
       url = "http://www.pro-football-reference.com/years/#{year}/draft.htm"
+    end
+
+    def team_id_from_pfr_abbreviation(team_abbreviation)
+      abbreviation = team_abbreviation.strip.downcase
+
+      return 0 if abbreviation === 'nor'
+      return 1 if abbreviation === 'hou'
+      return 2 if abbreviation === 'buf'
+      return 3 if abbreviation === 'bal'
+      return 4 if abbreviation === 'car'
+      return 5 if abbreviation === 'cin'
+      return 6 if abbreviation === 'den'
+      return 7 if abbreviation === 'chi'
+      return 8 if abbreviation === 'cle'
+      return 9 if abbreviation === 'kan'
+      return 10 if abbreviation === 'ari'
+      return 11 if abbreviation === 'sfo'
+      return 12 if abbreviation === 'oak'
+      return 13 if abbreviation === 'ind'
+      return 14 if abbreviation === 'dal'
+      return 15 if abbreviation === 'mia'
+      return 16 if abbreviation === 'nwe'
+      return 17 if abbreviation === 'det'
+      return 18 if abbreviation === 'atl'
+      return 19 if abbreviation === 'pit'
+      return 20 if abbreviation === 'phi'
+      return 21 if abbreviation === 'gnb'
+      return 22 if abbreviation === 'sea'
+      return 23 if abbreviation === 'min'
+      return 24 if abbreviation === 'nyg'
+      return 25 if abbreviation === 'sdg'
+      return 26 if abbreviation === 'jax'
+      return 27 if abbreviation === 'nyj'
+      return 28 if abbreviation === 'was'
+      return 29 if abbreviation === 'ten'
+      return 30 if abbreviation === 'tam'
+      return 31 if abbreviation === 'stl'
+
+      puts "!!! #{abbreviation}"
+
     end
 
     def team_abbreviation(team_name)
