@@ -79,6 +79,16 @@ class WebScraper
     end
   end
 
+  def draft_log(year)
+    url = "http://www.pro-football-reference.com/years/#{year}/draft.htm"
+
+    puts "url: #{url}"
+
+    @agent.get(url) do |page|
+      return page.search("#drafts")
+    end
+  end
+
 end
 
 
