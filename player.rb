@@ -130,25 +130,25 @@ class Player
 
   def ratings
     return [{
-      :hgt => @speed,
-      :stre => @strength,
-      :spd => @endurance,
-      :jmp => @athleticism,
-      :endu => @height,
-      :hnd => @hands,
-      :ins => @game_iq,
-      :dnk => @toughness,
-      :ft => @awareness,
-      :fg => @aggresiveness,
-      :tp => @motor,
-      :blk => @passing,
-      :stl => @receiving,
-      :drb => @blocking,
-      :pss => @def_rush,
-      :reb => @tackle,
-      :cvr => @coverage,
-      :kck => @kicking,
-      :pot => @potential
+      :hgt => Player.limit_ratings(@speed),
+      :stre => Player.limit_ratings(@strength),
+      :spd => Player.limit_ratings(@endurance),
+      :jmp => Player.limit_ratings(@athleticism),
+      :endu => Player.limit_ratings(@height),
+      :hnd => Player.limit_ratings(@hands),
+      :ins => Player.limit_ratings(@game_iq),
+      :dnk => Player.limit_ratings(@toughness),
+      :ft => Player.limit_ratings(@awareness),
+      :fg => Player.limit_ratings(@aggresiveness),
+      :tp => Player.limit_ratings(@motor),
+      :blk => Player.limit_ratings(@passing),
+      :stl => Player.limit_ratings(@receiving),
+      :drb => Player.limit_ratings(@blocking),
+      :pss => Player.limit_ratings(@def_rush),
+      :reb => Player.limit_ratings(@tackle),
+      :cvr => Player.limit_ratings(@coverage),
+      :kck => Player.limit_ratings(@kicking),
+      :pot => Player.limit_ratings(@potential)
     }]
   end
 
@@ -248,6 +248,13 @@ class Player
       :gamesUntilTradeable => 0,
       :pid => @id
     }
+  end
+
+  def self.limit_ratings(rating_value = 0)
+    value = rating_value.to_i
+    return 100 if (value > 100)
+    return 0 if (value < 0)
+    return value
   end
 
 end
