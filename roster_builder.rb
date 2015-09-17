@@ -7,6 +7,8 @@ require './util'
 # and generate an additional roster file
 @create_free_agents = true
 
+@show_details = true
+
 @startingSeason = 2016
 @players = []
 @players_with_free_agents = []
@@ -103,15 +105,26 @@ csv.each do |row|
     p.overall = overall.to_i
     p.potential = overall.to_i
     p.kicking = (kick_pwr.to_i + kick_acc.to_i) / 2
-    p.strength = throw_pwr.to_i if position.downcase === 'qb'
-    p.passing = (play_action.to_i + throw_acc_short.to_i + throw_acc_mid.to_i + throw_acc_deep.to_i) / 4
+    p.passing = (play_action.to_i + (throw_acc_short.to_i * 4) + (throw_acc_mid.to_i * 4) + (throw_acc_deep.to_i * 4)) / 12
     p.def_rush = (block_shedding.to_i + pursuit.to_i) / 2
     p.receiving = catching.to_i
     p.hands = catching.to_i
     p.athleticism = (agility.to_i + acceleration.to_i + jumping.to_i + elusiveness.to_i) / 4
-    p.athleticism = (agility.to_i + acceleration.to_i + jumping.to_i + elusiveness.to_i + throw_on_run.to_i) / 5 if position.downcase === 'qb'
     p.aggresiveness = (acceleration.to_i + tackle.to_i + pursuit.to_i) / 3
     p.motor = (block_shedding.to_i + power_moves.to_i + hit_power.to_i) / 3
+
+    # position-specific recalcs
+    case position.downcase
+      when 'qb'
+        p.game_iq = ((awareness.to_i * 10) + (throw_acc_deep.to_i * 2) + (throw_acc_mid.to_i * 3) + (throw_acc_short.to_i * 2) + (play_action.to_i) + (overall.to_i * 5)) / 23
+        p.passing = ((throw_acc_short.to_i * 10) + (throw_acc_mid.to_i * 10) + (throw_acc_deep.to_i * 10) + (throw_pwr.to_i * 5) + (overall.to_i * 4) + (awareness.to_i)) / 40
+        p.strength = ((throw_pwr.to_i * 6) + (strength.to_i * 2) + overall.to_i) / 9
+        p.athleticism = ((agility.to_i * 2) + acceleration.to_i + jumping.to_i + elusiveness.to_i + (throw_on_run.to_i * 2) + overall.to_i) / 8
+        p.speed = ((speed.to_i * 8) + (acceleration.to_i * 2) + overall.to_i) / 11
+        p.toughness = ((toughness.to_i * 8) + injury.to_i + stamina.to_i + overall.to_i) / 11
+        p.athleticism = ((speed.to_i * 3) + (agility.to_i * 3) + (acceleration.to_i * 2) + jumping.to_i + (elusiveness.to_i * 2) + (throw_on_run.to_i * 2) + juke_move.to_i + overall.to_i) / 15
+        p.awareness = ((awareness.to_i * 9) + (overall.to_i * 1)) / 10
+    end
 
     p.contract_amount = contract_val
     p.contract_expiration = contract_exp
@@ -122,6 +135,24 @@ csv.each do |row|
     p.draft_team_id = draft_team_id
     p.draft_round = draft_round
     p.draft_pick = draft_pick
+
+    if @show_details and p.output_position === 'QB'
+      puts "Player: #{p.full_name}"
+      puts "Team: #{p.team_name}"
+      puts "Position: #{p.output_position}"
+      puts "-----"
+      puts "Game IQ: #{p.game_iq}"
+      puts "Passing: #{p.passing}"
+      puts "Strength: #{p.strength}"
+      puts "Toughness: #{p.toughness}"
+      puts "Athleticism: #{p.athleticism}"
+      puts "Awareness: #{p.awareness}"
+      puts "Speed: #{p.speed}"
+      puts "\n"
+      puts "Overall Rating: #{p.overall}"
+      puts "Potential Rating: #{p.potential}"
+      puts "\n\n"
+    end
 
     @players.push(p)
     @player_id += 1

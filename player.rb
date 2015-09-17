@@ -152,6 +152,45 @@ class Player
     }]
   end
 
+  def overall
+    position = self.output_position
+
+    speed = Player.limit_ratings(@speed)
+    strength = Player.limit_ratings(@strength)
+    endurance = Player.limit_ratings(@endurance)
+    athleticism = Player.limit_ratings(@athleticism)
+    height = Player.limit_ratings(@height)
+    hands = Player.limit_ratings(@hands)
+    game_iq = Player.limit_ratings(@game_iq)
+    toughness = Player.limit_ratings(@toughness)
+    awareness = Player.limit_ratings(@awareness)
+    aggresiveness = Player.limit_ratings(@aggresiveness)
+    motor = Player.limit_ratings(@motor)
+    passing = Player.limit_ratings(@passing)
+    receiving = Player.limit_ratings(@receiving)
+    blocking = Player.limit_ratings(@blocking)
+    def_rush = Player.limit_ratings(@def_rush)
+    tackle = Player.limit_ratings(@tackle)
+    coverage = Player.limit_ratings(@coverage)
+    kicking = Player.limit_ratings(@kicking)
+    potential = Player.limit_ratings(@potential)
+
+    case position
+      when 'QB'
+        overall = ((game_iq * 4) + (passing * 4) + (strength * 2) + speed + athleticism + (awareness * 2) + toughness) / 15
+      when 'RB'
+        overall = ((toughness * 4) + (awareness * 4) + (strength * 4) + (speed * 2) + (athleticism * 2) + (hands * 2)) / 22
+      when 'TE'
+        overall = ((receiving * 4) + (blocking * 4) + (toughness * 3) + (awareness * 3) + (speed * 2) + (strength * 2)) / 18
+      when 'WR'
+        overall = ((speed * 4) + (receiving * 4) + blocking + strength + athleticism + awareness + toughness) / 13
+      else
+        overall = 5
+    end
+
+    return Player.limit_ratings(overall)
+  end
+
   def free_agent_mood
     fam = []
     30.times {fam.push(0)}
@@ -216,7 +255,6 @@ class Player
 
   def json_format
     {
-      # :face => self.default_face,
       :ratings => self.ratings,
       :born => {
         :year => @birth_year,
