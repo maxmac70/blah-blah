@@ -92,28 +92,6 @@ class Player
     end
   end
 
-  def set_ratings(speed, strength, endurance, athleticism, height, hands, game_iq, toughness, awareness, aggresiveness, motor, passing, receiving, blocking, def_rush, tackle, coverage, kicking, potential)
-    @speed = speed
-    @strength = strength
-    @endurance = endurance
-    @athleticism = athleticism
-    @height = height
-    @hands = hands
-    @game_iq = game_iq
-    @toughness = toughness
-    @awareness = awareness
-    @aggresiveness = aggresiveness
-    @motor = motor
-    @passing = passing
-    @receiving = receiving
-    @blocking = blocking
-    @def_rush = def_rush,
-    @tackle = tackle
-    @coverage = coverage
-    @kicking = kicking
-    @potential = potential
-  end
-
   def draft_details
     details = {
       :round => @draft_round,
@@ -152,6 +130,7 @@ class Player
     }]
   end
 
+  # __should__ return the overall value that matches the calculations on Football GM
   def overall
     position = self.output_position
 
@@ -195,62 +174,6 @@ class Player
     fam = []
     30.times {fam.push(0)}
     return fam
-  end
-
-  def default_face
-    {
-      :head => {
-        :id => 0
-      },
-      :eyebrows => [
-        {
-          :id => 0,
-          :lr => 'l',
-          :cx => 135,
-          :cy => 250
-        },
-        {
-          :id => 0,
-          :lr => 'r',
-          :cx => 265,
-          :cy => 250
-        }
-      ],
-      :eyes => [
-        {
-          :id => 3,
-          :lr => 'l',
-          :cx => 135,
-          :cy => 280,
-          :angle => 26.341
-        },
-        {
-          :id => 3,
-          :lr => 'r',
-          :cx => 265,
-          :cy => 280,
-          :angle => 26.341
-        }
-      ],
-      :nose => {
-        :id => 2,
-        :lr => 'l',
-        :cx => 200,
-        :cy => 330,
-        :size => 0.017,
-        :flip => false
-      },
-      :mouth => {
-        :id => 1,
-        :cx => 200,
-        :cy => 400
-      },
-      :hair => {
-        :id => 1
-      },
-      :fatness => 0.0305,
-      :color => '74453d',
-    }
   end
 
   def json_format
