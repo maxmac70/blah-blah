@@ -122,10 +122,7 @@ class Util
       end
     end
 
-    def get_draft_log(year)
-      url = "http://www.pro-football-reference.com/years/#{year}/draft.htm"
-    end
-
+    # convert the team_id integer to the value that PFR expects
     def team_id_from_pfr_abbreviation(team_abbreviation)
       abbreviation = team_abbreviation.strip.downcase
 
