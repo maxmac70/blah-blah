@@ -7,7 +7,7 @@ require './util'
 # and generate an additional roster file
 @create_free_agents = true
 
-@show_details = true
+@show_details = false
 
 @startingSeason = 2016
 @players = []
@@ -111,10 +111,10 @@ csv.each do |row|
     p.hands = catching.to_i
     p.athleticism = (agility.to_i + acceleration.to_i + jumping.to_i + elusiveness.to_i) / 4
     p.aggresiveness = (acceleration.to_i + tackle.to_i + pursuit.to_i) / 3
-    p.motor = (block_shedding.to_i + power_moves.to_i + hit_power.to_i) / 3
+    p.motor = ((pursuit.to_i * 8) + (jumping.to_i * 4) + (overall.to_i * 3)) / 15
 
     # position-specific recalcs
-    case position.downcase
+    case p.output_position.downcase
       when 'qb'
         p.game_iq = ((awareness.to_i * 10) + (throw_acc_deep.to_i * 2) + (throw_acc_mid.to_i * 3) + (throw_acc_short.to_i * 2) + (play_action.to_i) + (overall.to_i * 5)) / 23
         p.passing = ((throw_acc_short.to_i * 10) + (throw_acc_mid.to_i * 10) + (throw_acc_deep.to_i * 10) + (throw_pwr.to_i * 5) + (overall.to_i * 4) + (awareness.to_i)) / 40
@@ -123,14 +123,78 @@ csv.each do |row|
         p.speed = ((speed.to_i * 8) + (acceleration.to_i * 2) + overall.to_i) / 11
         p.toughness = ((toughness.to_i * 8) + injury.to_i + stamina.to_i + overall.to_i) / 11
         p.athleticism = ((speed.to_i * 3) + (agility.to_i * 3) + (acceleration.to_i * 2) + jumping.to_i + (elusiveness.to_i * 2) + (throw_on_run.to_i * 2) + juke_move.to_i + overall.to_i) / 15
-        p.awareness = ((awareness.to_i * 9) + (overall.to_i * 1)) / 10
-      when 'cb'
-        p.coverage = ((man_cov.to_i * 8) + (zone_cov.to_i * 8) + (play_recognition.to_i * 4) + (overall.to_i * 2)) / 22
+        p.awareness = ((awareness.to_i * 9) + (overall.to_i)) / 10
+      when 'rb'
+        p.toughness = ((toughness.to_i * 8) + (strength.to_i * 3) + (trucking.to_i * 2) + injury.to_i + (stamina.to_i * 3) + (stiff_arm.to_i * 3) + (overall.to_i * 2)) / 22
+        p.awareness = ((awareness.to_i * 9) + (carrying.to_i * 3) + (overall.to_i)) / 13
+        p.speed = ((speed.to_i * 11) + (agility.to_i * 2) + (acceleration.to_i * 3) + (elusiveness.to_i * 2) + (overall.to_i * 2)) / 20
+        p.strength = ((strength.to_i * 7) + (trucking.to_i * 2) + (overall.to_i)) / 10
+        p.endurance = ((stamina.to_i * 8) + (overall.to_i * 2)) / 10
+        p.athleticism = ((speed.to_i * 3) + (agility.to_i * 3) + (acceleration.to_i * 2) + (jumping.to_i) + (elusiveness.to_i * 2) + (juke_move.to_i * 3) + (spin_move.to_i * 3) + (stiff_arm.to_i * 3) + (overall.to_i * 2)) / 22
+        p.hands = ((catching.to_i * 2) + (carrying.to_i * 10) + (overall.to_i * 3)) / 15
+      when 'wr'
+        p.speed = ((speed.to_i * 8) + (acceleration.to_i * 2) + overall.to_i) / 11
+        p.receiving = ((catching.to_i * 17) + (release.to_i * 3) + (spectacular_catch.to_i) + (catch_in_traffic.to_i) + (overall.to_i * 2)) / 24
+        p.blocking = ((pass_block.to_i * 5) + (run_block.to_i * 5) + impact_block.to_i + (overall.to_i * 3)) / 14
+        p.strength = ((strength.to_i * 7) + (release.to_i * 3) + (overall.to_i * 2)) / 12
+        p.athleticism = ((speed.to_i * 3) + (agility.to_i * 4) + (acceleration.to_i * 3) + (jumping.to_i * 5) + (spectacular_catch.to_i * 2) + (elusiveness.to_i * 2) + (juke_move.to_i * 2) + (spin_move.to_i * 2) + (overall.to_i * 3)) / 27
+        p.awareness = ((awareness.to_i * 9) + (release.to_i * 3) + (overall.to_i * 2)) / 14
+        p.toughness = ((toughness.to_i * 8) + (strength.to_i) + (injury.to_i * 2) + (stamina.to_i * 2) + (overall.to_i * 2)) / 15
+      when 'te'
+        p.receiving = ((catching.to_i * 17) + (release.to_i * 3) + (spectacular_catch.to_i) + (catch_in_traffic.to_i) + (overall.to_i * 2)) / 24
+        p.blocking = ((pass_block.to_i * 7) + (run_block.to_i * 7) + (impact_block.to_i * 2) + (strength.to_i) + (overall.to_i * 3)) / 20
+        p.toughness = ((toughness.to_i * 8) + (strength.to_i) + (injury.to_i * 2) + (stamina.to_i * 2) + (overall.to_i * 2)) / 15
+        p.awareness = ((awareness.to_i * 9) + (release.to_i) + (overall.to_i * 2)) / 12
+        p.speed = ((speed.to_i * 8) + (acceleration.to_i * 2) + (overall.to_i)) / 11
+        p.strength = ((strength.to_i * 8) + (overall.to_i * 2)) / 10
+      when 'ol'
+        p.blocking = ((pass_block.to_i * 7) + (run_block.to_i * 7) + (impact_block.to_i * 2) + (strength.to_i) + (overall.to_i * 3)) / 20
+        p.awareness = ((awareness.to_i * 10) + (run_block.to_i * 2) + (pass_block.to_i * 2) + (overall.to_i * 3)) / 17
+        p.toughness = ((toughness.to_i * 8) + (strength.to_i) + (injury.to_i * 2) + (stamina.to_i * 2) + (overall.to_i * 2)) / 15
+        p.speed = ((speed.to_i * 7) + (acceleration.to_i * 2) + (overall.to_i * 3)) / 12
+        p.strength = ((strength.to_i * 8) + (overall.to_i * 2)) / 10
+        p.athleticism = ((strength.to_i * 2) + (acceleration.to_i * 4) + (jumping.to_i * 3) + (agility.to_i * 4) + (overall.to_i * 3)) / 16
+        p.hands = ((toughness.to_i * 3) + (impact_block.to_i * 2) + (overall.to_i * 2)) / 8
+      when 'dl'
+        p.def_rush = ((power_moves.to_i * 5) + (block_shedding.to_i * 10) + (pursuit.to_i * 3) + (overall.to_i * 2)) / 20
+        p.tackle = ((tackle.to_i * 10) + (pursuit.to_i * 2) + (overall.to_i)) / 13
+        p.strength = ((strength.to_i * 10) + (overall.to_i * 2)) / 12
+        p.speed = ((speed.to_i * 7) + (acceleration.to_i * 2) + (overall.to_i * 3)) / 12
+        p.athleticism = ((strength.to_i * 3) + (acceleration.to_i * 3) + (jumping.to_i * 3) + (agility.to_i * 3) + (block_shedding.to_i * 4) + (overall.to_i * 3)) / 19
+        p.hands = ((power_moves.to_i * 5) + (block_shedding.to_i * 5) + (overall.to_i * 3)) / 13
+        p.aggresiveness = ((block_shedding.to_i * 4) + (hit_power.to_i * 3) + (power_moves.to_i * 3) + (acceleration.to_i * 2) + (speed.to_i * 2) + (pursuit.to_i * 4) + (overall.to_i * 2)) / 20
+        p.motor = ((block_shedding.to_i * 2) + (pursuit.to_i * 6) + (jumping.to_i * 4) + (overall.to_i * 3)) / 15
+      when 'lb'
+        p.tackle = ((tackle.to_i * 9) + (pursuit.to_i * 2) + (overall.to_i)) / 12
+        p.def_rush = ((speed.to_i * 5) + (acceleration.to_i * 4) + (block_shedding.to_i * 3) + (pursuit.to_i * 5) + (overall.to_i * 2)) / 19
+        p.coverage = ((man_cov.to_i * 5) + (zone_cov.to_i * 11) + (play_recognition.to_i * 4) + (overall.to_i * 2)) / 22
+        p.aggresiveness = ((acceleration.to_i * 5) + (speed.to_i * 3) + (hit_power.to_i * 5) + (pursuit.to_i * 5) + (overall.to_i * 2)) / 20
+        p.motor = ((pursuit.to_i * 8) + (jumping.to_i * 4) + (overall.to_i * 3)) / 15
         p.speed = ((speed.to_i * 11) + (agility.to_i * 2) + (acceleration.to_i * 3) + (overall.to_i * 2)) / 18
-        p.aggresiveness = ((acceleration.to_i * 5) + (press.to_i * 2) + (speed.to_i * 2) + (pursuit.to_i * 4) + (overall.to_i * 2)) / 15
+        p.strength = ((strength.to_i * 10) + (overall.to_i * 2)) / 12
+        p.athleticism = ((speed.to_i * 3) + (agility.to_i * 3) + (acceleration.to_i * 2) + jumping.to_i + (overall.to_i * 3)) / 12
+      when 'cb'
+        p.coverage = ((man_cov.to_i * 9) + (zone_cov.to_i * 7) + (play_recognition.to_i * 4) + (overall.to_i * 2)) / 22
+        p.speed = ((speed.to_i * 11) + (agility.to_i * 2) + (acceleration.to_i * 3) + (overall.to_i * 2)) / 18
+        p.aggresiveness = ((acceleration.to_i * 5) + (press.to_i * 2) + (speed.to_i * 2) + (hit_power.to_i * 2) + (pursuit.to_i * 4) + (overall.to_i * 2)) / 17
         p.motor = ((pursuit.to_i * 7) + (jumping.to_i * 5) + (overall.to_i * 3)) / 15
-        p.hands = ((catching.to_i * 9) + (spectacular_catch.to_i) + (overall.to_i * 2)) / 11
+        p.hands = ((catching.to_i * 9) + (spectacular_catch.to_i) + (press.to_i * 3) + (overall.to_i * 2)) / 15
         p.tackle = ((tackle.to_i * 8) + (pursuit.to_i * 2) + (overall.to_i * 2)) / 12
+      when 's'
+        p.tackle = ((tackle.to_i * 8) + (pursuit.to_i * 3) + (toughness.to_i * 2) + (hit_power.to_i * 2) + (overall.to_i * 2)) / 17
+        p.coverage = ((man_cov.to_i * 6) + (zone_cov.to_i * 9) + (play_recognition.to_i * 5) + (overall.to_i * 2)) / 22
+        p.speed = ((speed.to_i * 11) + (agility.to_i * 2) + (acceleration.to_i * 3) + (overall.to_i * 2)) / 18
+        p.strength = ((strength.to_i * 6) + (toughness.to_i * 3) + (overall.to_i * 3)) / 12
+        p.athleticism = ((speed.to_i * 3) + (agility.to_i * 3) + (acceleration.to_i * 2) + jumping.to_i + (overall.to_i * 3)) / 12
+        p.hands = ((play_recognition.to_i * 5) + (catching.to_i * 6) + (spectacular_catch.to_i * 2) + (press.to_i * 3) + (overall.to_i * 3)) / 19
+        p.aggresiveness = ((acceleration.to_i * 5) + (press.to_i) + (speed.to_i * 3) + (hit_power.to_i * 5) + (pursuit.to_i * 4) + (overall.to_i * 2)) / 20
+        p.motor = ((pursuit.to_i * 7) + (jumping.to_i * 5) + (overall.to_i * 3)) / 15
+      when 'k'
+        p.kicking = ((kick_acc.to_i * 8) + (kick_pwr.to_i * 2) + (overall.to_i * 2)) / 12
+        p.strength = ((kick_pwr.to_i * 10) + (strength.to_i) + (overall.to_i)) / 12
+        p.athleticism = ((agility.to_i) + (acceleration.to_i) + (jumping.to_i) + (overall.to_i * 2)) / 5
+        p.game_iq = ((awareness.to_i * 6) + (kick_acc.to_i * 3) + (overall.to_i)) / 10
+        p.awareness = ((awareness.to_i * 10) + (kick_acc.to_i) * (overall.to_i * 2)) / 13
     end
 
     p.contract_amount = contract_val
@@ -143,7 +207,7 @@ csv.each do |row|
     p.draft_round = draft_round
     p.draft_pick = draft_pick
 
-    if @show_details and p.output_position === 'CB'
+    if @show_details and p.output_position === 'K' and p.potential > 85
       puts "Player: #{p.full_name}"
       puts "Team: #{p.team_name}"
       puts "Position: #{p.output_position}"
@@ -160,6 +224,11 @@ csv.each do |row|
       puts "Motor: #{p.motor}"
       puts "Tackle: #{p.tackle}"
       puts "Hands: #{p.hands}"
+      puts "Endurance: #{p.endurance}"
+      puts "Def Rush: #{p.def_rush}"
+      puts "Receiving: #{p.receiving}"
+      puts "Blocking: #{p.blocking}"
+      puts "Kicking: #{p.kicking}"
       puts "\n"
       puts "Overall Rating: #{p.overall}"
       puts "Potential Rating: #{p.potential}"

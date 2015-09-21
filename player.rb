@@ -158,15 +158,25 @@ class Player
       when 'QB'
         overall = ((game_iq * 4) + (passing * 4) + (strength * 2) + speed + athleticism + (awareness * 2) + toughness) / 15
       when 'RB'
-        overall = ((toughness * 4) + (awareness * 4) + (strength * 4) + (speed * 2) + (athleticism * 2) + (hands * 2)) / 22
+        overall = ((toughness * 4) + (awareness * 4) + (speed * 4) + (strength * 4) + (endurance * 2) + (athleticism * 2) + (hands * 2)) / 22
       when 'TE'
         overall = ((receiving * 4) + (blocking * 4) + (toughness * 3) + (awareness * 3) + (speed * 2) + (strength * 2)) / 18
       when 'WR'
         overall = ((speed * 4) + (receiving * 4) + blocking + strength + athleticism + awareness + toughness) / 13
+      when 'LB'
+        overall = ((tackle * 4) + (def_rush * 4) + (coverage * 2) + (aggresiveness * 4) + (motor * 4) + (speed * 4) + (strength * 4) + (athleticism)) / 27
       when 'CB'
         overall = ((coverage * 4) + (speed * 4) + (aggresiveness) + (motor) + (tackle * 2) + (hands)) / 13
+      when 'OL'
+        overall = ((blocking * 4) + (awareness * 4) + (toughness) + (speed) + (strength * 4) + (athleticism) + (hands * 4)) / 19
+      when 'DL'
+        overall = ((def_rush * 4) + (tackle * 3) + (strength * 2) + (speed * 2) + (athleticism * 2) + (hands * 2) + (aggresiveness * 4) + (motor * 2)) / 21
+      when 'S'
+        overall = ((tackle * 4) + (coverage * 4) + (speed * 4) + (strength * 2) + (athleticism * 2) + (hands) + (aggresiveness * 2) + (motor * 2)) / 21
+      when 'K'
+        overall = ((kicking * 4) + (strength * 4) + (athleticism) + (game_iq) + (awareness)) / 11
       else
-        overall = 5
+        overall = 0 # something is off
     end
 
     return Player.limit_ratings(overall)
