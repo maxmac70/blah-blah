@@ -163,6 +163,8 @@ class Player
         overall = ((receiving * 4) + (blocking * 4) + (toughness * 3) + (awareness * 3) + (speed * 2) + (strength * 2)) / 18
       when 'WR'
         overall = ((speed * 4) + (receiving * 4) + blocking + strength + athleticism + awareness + toughness) / 13
+      when 'CB'
+        overall = ((coverage * 4) + (speed * 4) + (aggresiveness) + (motor) + (tackle * 2) + (hands)) / 13
       else
         overall = 5
     end

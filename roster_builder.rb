@@ -124,6 +124,13 @@ csv.each do |row|
         p.toughness = ((toughness.to_i * 8) + injury.to_i + stamina.to_i + overall.to_i) / 11
         p.athleticism = ((speed.to_i * 3) + (agility.to_i * 3) + (acceleration.to_i * 2) + jumping.to_i + (elusiveness.to_i * 2) + (throw_on_run.to_i * 2) + juke_move.to_i + overall.to_i) / 15
         p.awareness = ((awareness.to_i * 9) + (overall.to_i * 1)) / 10
+      when 'cb'
+        p.coverage = ((man_cov.to_i * 8) + (zone_cov.to_i * 8) + (play_recognition.to_i * 4) + (overall.to_i * 2)) / 22
+        p.speed = ((speed.to_i * 11) + (agility.to_i * 2) + (acceleration.to_i * 3) + (overall.to_i * 2)) / 18
+        p.aggresiveness = ((acceleration.to_i * 5) + (press.to_i * 2) + (speed.to_i * 2) + (pursuit.to_i * 4) + (overall.to_i * 2)) / 15
+        p.motor = ((pursuit.to_i * 7) + (jumping.to_i * 5) + (overall.to_i * 3)) / 15
+        p.hands = ((catching.to_i * 9) + (spectacular_catch.to_i) + (overall.to_i * 2)) / 11
+        p.tackle = ((tackle.to_i * 8) + (pursuit.to_i * 2) + (overall.to_i * 2)) / 12
     end
 
     p.contract_amount = contract_val
@@ -136,7 +143,7 @@ csv.each do |row|
     p.draft_round = draft_round
     p.draft_pick = draft_pick
 
-    if @show_details and p.output_position === 'QB'
+    if @show_details and p.output_position === 'CB'
       puts "Player: #{p.full_name}"
       puts "Team: #{p.team_name}"
       puts "Position: #{p.output_position}"
@@ -148,6 +155,11 @@ csv.each do |row|
       puts "Athleticism: #{p.athleticism}"
       puts "Awareness: #{p.awareness}"
       puts "Speed: #{p.speed}"
+      puts "Coverage: #{p.coverage}"
+      puts "Aggresiveness: #{p.aggresiveness}"
+      puts "Motor: #{p.motor}"
+      puts "Tackle: #{p.tackle}"
+      puts "Hands: #{p.hands}"
       puts "\n"
       puts "Overall Rating: #{p.overall}"
       puts "Potential Rating: #{p.potential}"
